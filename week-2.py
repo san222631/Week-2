@@ -1,58 +1,96 @@
-# TASK-1 (尚未加入小碧潭)
+# TASK-1 (已加入小碧潭)
 def find_and_print(messages, current_station):
 
-    #List
-    green_line = [
-        "Songshan", "Nanjing Sanmin", "Taipei Arena", "Nanjing Fuxing",
-        "Songjiang Nanjing", "Zhongshan", "Beimen", "Ximen", "Xiaonanmen",
-        "Chiang Kai-Shek Memorial Hall", "Guting", "Taipower Building",
-        "Gongguan", "Wanlong", "Jingmei", "Dapinglin", "Qizhang",
-        "Xindian City Hall", "Xindian"
-    ]
-
-    #將messages裡面的value轉換成數字，數字代表在green_line的list裡面的數字
-    friend_num = -1
-    for station in green_line:
-        friend_num += 1
-        if any(station in value for value in messages.values()):
-            for key, value in messages.items():
-                if station in value:
-                    messages[key] = str(friend_num)
-
+#將messages裡面的value轉換成數字，數字代表在green_line的value裡面的數字
+    for friend, conversation in messages.items():
+        for station in green_line:
+            if station in conversation:
+                messages[friend] = green_line[station]
+                break #超級重要的一個打斷!!!!!!!這個可以區分messages裡面的新店跟新店市政府
     print(messages)  #確認新的messages dictionary
 
-    my_num = 0
-    for my_location in green_line:
-        if current_station != my_location:
-            my_num += 1
-        else:
-            break  #green_line[my_num] = current_station
+    
+    #確認我在的車站，現在在list的數字
+    my_num = int(green_line[current_station])        
     print(my_num)  #確認我這個車站現在在list的數字
 
-    key_closest_friend = None  #先假設沒有最近的朋友
-    min_difference = float('inf')  #無窮大的浮點數，用的時機要再查
-    for key, value in messages.items():
-        difference = abs(int(value) - my_num)  #計算我和朋友車站的數字差
-        if difference < min_difference:
-            min_difference = difference
-            key_closest_friend = key
+    
+    #狀況1:有朋友在小碧潭+有朋友在七張+我在新店或新店市政府
+    friend_xiaobitan = False
+    friend_qizhang = False
+    me_xindian = current_station in ["Xindian City Hall", "Xindian"]
 
+    key_closest_friend = None  #靠我最近的朋友，先假設None
+    min_difference = 100 #我和朋友最短的差距，先假設無窮大float('inf')或是自選100
+    
+    for station_value in messages.values():
+        if "17" in station_value:
+            friend_xiaobitan = True
+        if "16" in station_value:
+            friend_qizhang = True
+            
+    #狀況1:有朋友在小碧潭+有朋友在七張+我在新店或新店市政府
+    if friend_xiaobitan and friend_qizhang and me_xindian:
+        print("special-1")
+        for key, value in messages.items():
+            if value == "16":
+                messages[key] = "18"
+            
+        for key, value in messages.items():
+            difference = abs(int(value) - my_num)  #計算我和朋友車站的數字差
+            if difference < min_difference:
+                min_difference = difference
+                key_closest_friend = key
+                
+    else:
+        print("normal")
+        for key, value in messages.items():
+            difference = abs(int(value) - my_num)  #計算我和朋友車站的數字差
+            if difference < min_difference:
+                min_difference = difference
+                key_closest_friend = key    
+    
     print(key_closest_friend)
     return key_closest_friend
 
-messages = {
-    #"Leslie":"I'm at home near Xiaobitan station.",先假設沒有小碧潭
-    "Bob": "I'm at Ximen MRT station.",
-    "Mary": "I have a drink near Jingmei MRT station.",
-    "Copper": "I just saw a concert at Taipei Arena.",
-    "Vivian": "I'm at Xindian station waiting for you."
+
+green_line = {
+    "Songshan":"0",
+    "Nanjing Sanmin":"1",
+    "Taipei Arena":"2",
+    "Nanjing Fuxing":"3",
+    "Songjiang Nanjing":"4",
+    "Zhongshan":"5",
+    "Beimen":"6",
+    "Ximen":"7",
+    "Xiaonanmen":"8",
+    "Chiang Kai-Shek Memorial Hall":"9",
+    "Guting":"10",
+    "Taipower Building":"11",
+    "Gongguan":"12",
+    "Wanlong":"13",
+    "Jingmei":"14",
+    "Dapinglin":"15",
+    "Qizhang":"16",
+    "Xiaobitan":"17", #異數
+    "Xindian City Hall":"19",
+    "Xindian":"20",
 }
 
-find_and_print(messages, "Wanlong")  # print Mary
-find_and_print(messages, "Songshan")  # print Copper
-#find_and_print(messages, "Qizhang") # print Leslie 還要加入小碧潭!!!!
-find_and_print(messages, "Ximen")  # print Bob
-find_and_print(messages, "Xindian City Hall")  # print Vivian
+messages = {
+    "Leslie":"I'm at home near Xiaobitan station.", #異數 
+    "Bob": "I'm at Ximen MRT station.", 
+    "Mary": "I have a drink near Jingmei MRT station.",
+    "Copper": "I just saw a concert at Taipei Arena.",
+    "Vivian": "I'm at Xindian station waiting for you." #找出要怎麼區分新店跟新店市政府
+}
+
+
+find_and_print(messages, "Wanlong") # print Mary
+find_and_print(messages, "Songshan") # print Copper
+find_and_print(messages, "Qizhang") # print Leslie
+find_and_print(messages, "Ximen") # print Bob
+find_and_print(messages, "Xindian City Hall") # print Vivian
 
 
 
