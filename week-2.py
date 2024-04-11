@@ -95,6 +95,83 @@ find_and_print(messages, "Xindian City Hall") # print Vivian
 
 
 
+# TASK-2
+#所有顧問的行程表一開始都有空，這個行程表應該要放在function上面
+schedule = {"John": [], "Bob": [], "Jenny": []}
+
+def book(consultants, hour, duration, criteria):
+
+    #客戶要的時間段
+    hours_to_check = range(hour, hour + duration)
+
+    #確認大家現有的時間表
+    available_pp = {}
+    for consultant, hour_booked in schedule.items():  #range(a, b)裡面的b不會被算到喔!
+        if all(hour not in hour_booked for hour in hours_to_check):
+            available_pp[consultant] = hour_booked
+
+    #確認到底有沒有人有空
+    if available_pp:  #這個list如果沒有任何element在裡面，那會直接跳到else!!
+        ###print(available_pp)
+
+        #開始比較有空的人的價錢跟評價
+        available_people = available_pp.keys()
+        ###print(available_people)
+        max_rate = 0
+        min_price = 5000
+        chosen_one = None
+    
+        for person in available_people:
+            for consultant in consultants:
+                if consultant["name"] == person:
+                    if criteria == "rate":
+                        if consultant["rate"] > max_rate:
+                            max_rate = consultant["rate"]
+                            chosen_one = person
+                    elif criteria == "price":
+                        if consultant["price"] < min_price:
+                            min_price = consultant["price"]
+                            chosen_one = person
+    
+        if criteria == "rate":
+            print(chosen_one)
+            ###print(max_rate)
+        elif criteria == "price":
+            print(chosen_one)
+            ###print(min_price)
+    
+        if chosen_one is not None:
+            schedule[chosen_one].extend(hours_to_check)
+        ###print(schedule)    
+    
+    else:
+        print("No Service")
+
+#這個不能改
+consultants = [{
+    "name": "John",
+    "rate": 4.5,
+    "price": 1000
+}, {
+    "name": "Bob",
+    "rate": 3,
+    "price": 1200
+}, {
+    "name": "Jenny",
+    "rate": 3.8,
+    "price": 800
+}]
+
+book(consultants, 15, 1, "price")  # Jenny
+book(consultants, 11, 2, "price")  # Jenny
+book(consultants, 10, 2, "price")  # John
+book(consultants, 20, 2, "rate")  # John
+book(consultants, 11, 1, "rate")  # Bob
+book(consultants, 11, 2, "rate")  # No Service
+book(consultants, 14, 3, "price")  # John
+
+
+
 
 # TASK-3
 def func(*data):
