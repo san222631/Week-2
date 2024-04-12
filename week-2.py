@@ -7,12 +7,12 @@ def find_and_print(messages, current_station):
             if station in conversation:
                 messages[friend] = green_line[station]
                 break #超級重要的一個打斷!!!!!!!這個可以區分messages裡面的新店跟新店市政府
-    print(messages)  #確認新的messages dictionary
+    ###print(messages)  #確認新的messages dictionary
 
     
     #確認我在的車站，現在在list的數字
     my_num = int(green_line[current_station])        
-    print(my_num)  #確認我這個車站現在在list的數字
+    ###print(my_num)  #確認我這個車站現在在list的數字
 
     
     #狀況1:有朋友在小碧潭+有朋友在七張+我在新店或新店市政府
@@ -21,7 +21,7 @@ def find_and_print(messages, current_station):
     me_xindian = current_station in ["Xindian City Hall", "Xindian"]
 
     key_closest_friend = None  #靠我最近的朋友，先假設None
-    min_difference = 100 #我和朋友最短的差距，先假設無窮大float('inf')或是自選100
+    min_difference = 100  #我和朋友最短的差距，先假設無窮大float('inf')或是自選100
     
     for station_value in messages.values():
         if "17" in station_value:
@@ -31,7 +31,7 @@ def find_and_print(messages, current_station):
             
     #狀況1:有朋友在小碧潭+有朋友在七張+我在新店或新店市政府
     if friend_xiaobitan and friend_qizhang and me_xindian:
-        print("special-1")
+        ###print("special-1")
         for key, value in messages.items():
             if value == "16":
                 messages[key] = "18"
@@ -43,7 +43,7 @@ def find_and_print(messages, current_station):
                 key_closest_friend = key
                 
     else:
-        print("normal")
+        ###print("normal")
         for key, value in messages.items():
             difference = abs(int(value) - my_num)  #計算我和朋友車站的數字差
             if difference < min_difference:
@@ -97,7 +97,7 @@ find_and_print(messages, "Xindian City Hall") # print Vivian
 
 # TASK-2
 #所有顧問的行程表一開始都有空，這個行程表應該要放在function上面
-schedule = {"John": [], "Bob": [], "Jenny": []}
+schedule = {}
 
 def book(consultants, hour, duration, criteria):
 
@@ -161,6 +161,15 @@ consultants = [{
     "rate": 3.8,
     "price": 800
 }]
+
+#把consultants的資料更新到schedule上面
+for info in consultants:
+    checking_new_name = info["name"]
+    ###print(checking_new_name)
+    if all(key not in checking_new_name for key, value in schedule.items()):
+        ###print(checking_new_name)
+        schedule[checking_new_name] = []
+        ###print(schedule)
 
 book(consultants, 15, 1, "price")  # Jenny
 book(consultants, 11, 2, "price")  # Jenny
